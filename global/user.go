@@ -18,6 +18,6 @@ type User struct {
 func (u User) GetToken() string {
 	byteSlc, _ := json.Marshal(u)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"data": string(byteSlc)})
-	tokenString, _ := token.SigningString(jwtSecret)
+	tokenString, _ := token.SignedString(jwtSecret)
 	return tokenString
 }

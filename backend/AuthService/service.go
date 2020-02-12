@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/sanprasirt/blog-application/global"
 	"github.com/sanprasirt/blog-application/proto"
 	"go.mongodb.org/mongo-driver/bson"
@@ -21,10 +22,10 @@ func (authServer) Login(_ context.Context, in *proto.LoginRequest) (*proto.AuthR
 	var user global.User
 	global.DB.Collection("user").FindOne(ctx, bson.M{"$or": []bson.M{bson.M{"username": login}, bson.M{"email": login}}}).Decode(&user)
 	if user == global.NilUser {
-		return &proto.AuthResponse{}, error.New("Wrong Login Credentials provided")
+		return &proto.AuthResponse{}, errors.New("Wrong Login Credentials provided")
 	}
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
-		return &proto.AuthResponse{}, error.New("Wrong Login Credentials provided")
+		return &proto.AuthResponse{}, errors.New("Wrong Login Credentials provided")
 	}
 	return &proto.AuthResponse{Token: user.GetToken()}, nil
 }
