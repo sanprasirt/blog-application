@@ -21,3 +21,13 @@ func (u User) GetToken() string {
 	tokenString, _ := token.SignedString(jwtSecret)
 	return tokenString
 }
+
+func UserfromToken(token string) User {
+	claims := jwt.MapClaims{}
+	jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (i interface{}, err error) {
+		return jwtSecret, nil
+	})
+	var result User
+	json.Unmarshal([]byte(claims["data"].(string)), &result)
+	return result
+}

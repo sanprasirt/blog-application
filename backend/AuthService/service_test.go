@@ -18,6 +18,8 @@ func Test_authServer_Login(t *testing.T) {
 	if err != nil {
 		t.Error("1: An error return", err.Error())
 	}
+	// t.Error(res.GetToken())
+
 	_, err = server.Login(context.Background(), &proto.LoginRequest{Login: "something", Password: "something"})
 	if err == nil {
 		t.Error("2: Error was nil")
@@ -90,5 +92,17 @@ func Test_authServer_Signup(t *testing.T) {
 	_, err = server.Signup(context.Background(), &proto.SignupRequest{Username: "example", Email: "example@gmail.com", Password: "exam"})
 	if err.Error() != "Validation failed" {
 		t.Error("4: No or wrong Error was returned")
+	}
+}
+
+func Test_authServer_AuthUser(t *testing.T) {
+	server := authServer{}
+	res, err := server.AuthUser(context.Background(), &proto.AuthUserRequest{Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoie1wiSURcIjpcIjVlNDU1ZWUwYzcwMmIwZmNmYWQ0NzVjZFwiLFwiVXNlcm5hbWVcIjpcIkNhcmxcIixcIkVtYWlsXCI6XCJ0ZXN0QGdtYWlsLmNvbVwiLFwiUGFzc3dvcmRcIjpcIiQyYSQxMCRhL2Fid3pDLi44aWFkNTF1UkhtL1ouTkVtN0VtQmRrcXFqNDhUME1SVGRvRUxuR3Zzd1U4aVwifSJ9.Th08_LdZrqWbjb3oQ8vZvjECnLFwLpo2QMIz44o5fi0"})
+	//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoie1wiSURcIjpcIjVlNDU1ZWUwYzcwMmIwZmNmYWQ0NzVjZFwiLFwiVXNlcm5hbWVcIjpcIkNhcmxcIixcIkVtYWlsXCI6XCJ0ZXN0QGdtYWlsLmNvbVwiLFwiUGFzc3dvcmRcIjpcIiQyYSQxMCRhL2Fid3pDLi44aWFkNTF1UkhtL1ouTkVtN0VtQmRrcXFqNDhUME1SVGRvRUxuR3Zzd1U4aVwifSJ9.Th08_LdZrqWbjb3oQ8vZvjECnLFwLpo2QMIz44o5fi0"
+	if err != nil {
+		t.Error("an error was returned")
+	}
+	if res.GetID() != "5e455ee0c702b0fcfad475cd" || res.GetEmail() != "test@gmail.com" || res.GetUsername() != "Carl" {
+		t.Error("wrong result returned")
 	}
 }
